@@ -125,5 +125,3 @@ while crashed:
 
 pygame.quit()
 quit()
-
-Hello World!!
