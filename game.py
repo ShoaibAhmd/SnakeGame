@@ -44,7 +44,6 @@ class Snake:
         self.initial = pygame.Rect(self.posX, self.posY, 15, 15)
         self.color = (100,100,100)
         self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 1)
-        
 
     def moveSnake(self, X, Y):
         self.posX += X
@@ -59,12 +58,11 @@ class Snake:
         self.initial.y = self.posY
         self.color = (100,100,100)
         self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 1)
-    
 
-Slither = [0,0,0]
-dirX = 0
+Slither = []
+slitherLength = 0
+dirX = 15
 dirY = 0
-
                         
 crashed = True
 
@@ -77,7 +75,7 @@ while crashed:
         elif event.type == pygame.VIDEOEXPOSE:
             foodObj = Food()
             foodObj.GenerateFood()
-            Slither[0] = Snake()
+            Slither.append(Snake()) 
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
@@ -96,13 +94,16 @@ while crashed:
         elif event.type == moveSnakeEvent:
             gameDisplay.fill((0,0,0))
             if Slither[0].initial.colliderect(foodObj.food) == True:
-                Slither[1] = Snake()
+                slitherLength += 1
+                Slither.append(Snake())
                 foodObj.GenerateFood()
+            
             foodObj.ShowFood()
             oldPosX = Slither[0].posX
             oldPosY = Slither[0].posY
             Slither[0].moveSnake(dirX, dirY)
-            if Slither[1] != 0:
+
+            if slitherLength > 0:
                 Slither[1].posX = oldPosX
                 Slither[1].posY = oldPosY
                 Slither[1].showSnake()
