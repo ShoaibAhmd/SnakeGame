@@ -21,7 +21,7 @@ class Food:
     def ShowFood(self):
         self.food = pygame.Rect(self.randomX, self.randomY, 15, 15)
         self.color = (0,255,0)
-        self.showFood = pygame.draw.rect(gameDisplay, self.color, self.food, 1)
+        self.showFood = pygame.draw.rect(gameDisplay, self.color, self.food, 0)
 
     def GenerateFood(self):
         self.randomX = int(random.random() * 480)
@@ -34,7 +34,7 @@ class Food:
             
         self.food = pygame.Rect(self.randomX, self.randomY, 15, 15)
         self.color = (0,255,0)
-        self.showFood = pygame.draw.rect(gameDisplay, self.color, self.food, 1)
+        self.showFood = pygame.draw.rect(gameDisplay, self.color, self.food, 0)
 
 class Snake:
     
@@ -43,7 +43,7 @@ class Snake:
         self.posY = 45
         self.initial = pygame.Rect(self.posX, self.posY, 15, 15)
         self.color = (100,100,100)
-        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 1)
+        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 0)
 
     def moveSnake(self, X, Y):
         self.posX += X
@@ -51,13 +51,13 @@ class Snake:
         self.initial.x = self.posX
         self.initial.y = self.posY
         self.color = (100,100,100)
-        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 1)
+        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 0)
 
     def showSnake(self):
         self.initial.x = self.posX
         self.initial.y = self.posY
         self.color = (100,100,100)
-        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 1)
+        self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 0)
 
 Slither = []
 slitherLength = 0
@@ -79,17 +79,21 @@ while crashed:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                dirX = 0
-                dirY = 15
+                if dirY != -15:
+                    dirX = 0
+                    dirY = 15
             elif event.key == pygame.K_UP:
-                dirX = 0
-                dirY = -15
+                if dirY != 15:
+                    dirX = 0
+                    dirY = -15
             elif event.key == pygame.K_LEFT:
-                dirX = -15
-                dirY = 0
+                if dirX != 15:
+                    dirX = -15
+                    dirY = 0
             elif event.key == pygame.K_RIGHT:
-                dirX = 15
-                dirY = 0
+                if dirX != -15:
+                    dirX = 15
+                    dirY = 0
 
         elif event.type == moveSnakeEvent:
             gameDisplay.fill((0,0,0))
@@ -99,14 +103,22 @@ while crashed:
                 foodObj.GenerateFood()
             
             foodObj.ShowFood()
+            
             oldPosX = Slither[0].posX
             oldPosY = Slither[0].posY
             Slither[0].moveSnake(dirX, dirY)
-
+            
             if slitherLength > 0:
-                Slither[1].posX = oldPosX
-                Slither[1].posY = oldPosY
-                Slither[1].showSnake()
+                counter = slitherLength
+                while counter >= 1:
+                    if counter == 1:
+                        Slither[counter].posX = oldPosX
+                        Slither[counter].posY = oldPosY
+                    else:
+                        Slither[counter].posX = Slither[counter - 1].posX
+                        Slither[counter].posY = Slither[counter - 1].posY
+                    Slither[counter].showSnake()
+                    counter -= 1
 
         print(event)
 
@@ -114,4 +126,4 @@ while crashed:
     #clock.tick(50)
 
 pygame.quit()
-quit()
+
