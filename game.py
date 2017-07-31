@@ -6,6 +6,12 @@ gameDisplay.fill((0,0,0))
 pygame.display.set_caption("Saanp Wali Game")
 clock = pygame.time.Clock()
 
+def ShowBorder():
+    borderRect = pygame.Rect(5, 5, 490, 490)
+    borderColor = (255,255,255)
+    pygame.draw.rect(gameDisplay, borderColor, borderRect, 15)
+
+
 moveSnakeEvent = pygame.USEREVENT + 1
 pygame.time.set_timer(moveSnakeEvent, 100)
 
@@ -120,6 +126,7 @@ while crashed:
                     Slither[counter].showSnake()
                     counter -= 1
 
+        ShowBorder()
         print(event)
 
     pygame.display.update()
