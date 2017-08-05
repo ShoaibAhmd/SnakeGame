@@ -3,17 +3,29 @@ import pygame, random, numpy as np
 pygame.init()
 gameDisplay = pygame.display.set_mode((500,500))
 gameDisplay.fill((0,0,0))
-pygame.display.set_caption("Saanp Wali Game")
+pygame.display.set_caption("Snake")
 clock = pygame.time.Clock()
-
-def ShowBorder():
-    borderRect = pygame.Rect(5, 5, 490, 490)
-    borderColor = (255,255,255)
-    pygame.draw.rect(gameDisplay, borderColor, borderRect, 15)
-
 
 moveSnakeEvent = pygame.USEREVENT + 1
 pygame.time.set_timer(moveSnakeEvent, 100)
+
+
+class Border:
+
+    def __init__(self, posX, posY, length, width):
+        self.posX = posX
+        self.posY = posY
+        self.length = length
+        self.width = width
+        self.borderRect = 0
+        self.borderColor = 0
+        self.showBorder = 0
+
+    def ShowBorder(self):
+        self.borderRect = pygame.Rect(self.posX, self.posY, self.width, self.length)
+        self.color = (100,200,150)
+        self.showBorder = pygame.draw.rect(gameDisplay, self.color, self.borderRect, 0)
+
 
 class Food:
 
@@ -48,7 +60,7 @@ class Snake:
         self.posX = 45
         self.posY = 45
         self.initial = pygame.Rect(self.posX, self.posY, 15, 15)
-        self.color = (100,100,100)
+        self.color = (0,0,0)
         self.snake = pygame.draw.rect(gameDisplay, self.color, self.initial, 0)
 
     def moveSnake(self, X, Y):
@@ -69,6 +81,11 @@ Slither = []
 slitherLength = 0
 dirX = 15
 dirY = 0
+
+leftBorder = Border(5,5,490,15)
+rightBorder = Border(480,5,490,15)
+topBorder = Border(5,5,15,490)
+bottomBorder = Border(5,480,15,490)
                         
 crashed = True
 
@@ -107,6 +124,12 @@ while crashed:
                 slitherLength += 1
                 Slither.append(Snake())
                 foodObj.GenerateFood()
+
+            elif Slither[0].initial.colliderect(leftBorder.borderRect) == True or Slither[0].initial.colliderect(rightBorder.borderRect) == True or Slither[0].initial.colliderect(topBorder.borderRect) == True or Slither[0].initial.colliderect(bottomBorder.borderRect) == True:
+                print("GAME OVER!! :P")
+                dirX = 0
+                dirY = 0
+                pygame.quit()
             
             foodObj.ShowFood()
             
@@ -126,11 +149,14 @@ while crashed:
                     Slither[counter].showSnake()
                     counter -= 1
 
-        ShowBorder()
+        leftBorder.ShowBorder()
+        rightBorder.ShowBorder()
+        topBorder.ShowBorder()
+        bottomBorder.ShowBorder()
         print(event)
 
     pygame.display.update()
     #clock.tick(50)
 
 pygame.quit()
-
+quit()
