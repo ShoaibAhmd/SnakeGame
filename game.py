@@ -114,12 +114,12 @@ rightBorder = Border(485,0,500,15)
 topBorder = Border(0,0,15,500)
 bottomBorder = Border(0,485,15,500)
 
-flagGameOver = False                        
+flagGameOver = False
+keyFlag = False
 crashed = True
 
 while crashed:
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
             crashed = False
             
@@ -128,7 +128,8 @@ while crashed:
             foodObj.GenerateFood()
             Slither.append(Snake()) 
 
-        elif event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN and keyFlag == False:
+            keyFlag = True
             if event.key == pygame.K_DOWN:
                 if dirY != -15:
                     dirX = 0
@@ -147,7 +148,7 @@ while crashed:
                     dirY = 0
 
         elif event.type == moveSnakeEvent:
-
+            keyFlag = False
             gameDisplay.fill((52, 152, 219))
             if Slither[0].initial.colliderect(foodObj.food) == True:
                 slitherLength += 1
