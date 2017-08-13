@@ -1,4 +1,5 @@
 import pygame, random, numpy as np
+from os import path
 
 pygame.init()
 gameDisplay = pygame.display.set_mode((500,570))
@@ -13,6 +14,20 @@ Slither = []
 slitherLength = 0
 dirX = 0
 dirY = 0
+
+def HighScore():
+    if path.isfile('highscore.txt'):
+        fileObj = open('highscore.txt', 'r')
+        highscore = fileObj.read()
+        fileObj.close()
+        if int(highscore) < slitherLength:
+            fileObj = open('highscore.txt', 'w')
+            fileObj.write(str(slitherLength))
+            fileObj.close()
+    else:
+        fileObj = open('highscore.txt', 'w')
+        fileObj.write(str(slitherLength))
+        fileObj.close()
 
 def GameOver():
     basicfont = pygame.font.SysFont("calibri", 60, True)
@@ -161,6 +176,7 @@ while crashed:
                 dirY = 0
                 crashed = False
                 flagGameOver = True
+                HighScore()
                 #break;
 
             if slitherLength >= 1:
@@ -172,6 +188,7 @@ while crashed:
                         dirY = 0
                         crashed = False
                         flagGameOver = True
+                        HighScore()
                         break;
                     counter += 1
             
