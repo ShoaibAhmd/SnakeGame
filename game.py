@@ -15,7 +15,24 @@ slitherLength = 0
 dirX = 0
 dirY = 0
 
-def HighScore():
+def RenderText(textToRender, fontSize, posX, posY):
+    basicfont = pygame.font.SysFont("calibri", fontSize, True)
+    text = basicfont.render(textToRender, True, (255, 255, 255), (52, 152, 219))
+    textrect = text.get_rect()
+    textrect.centerx = posX
+    textrect.centery = posY
+    gameDisplay.blit(text, textrect)
+
+def ShowHighScore():
+    highScore = 0
+    if path.isfile('highscore.txt'):
+        fileObj = open('highscore.txt', 'r')
+        highScore = fileObj.read()
+        fileObj.close()        
+    
+    RenderText("High Score: {}".format(highScore), 20, 400, 535)
+
+def UpdateHighScore():
     if path.isfile('highscore.txt'):
         fileObj = open('highscore.txt', 'r')
         highscore = fileObj.read()
@@ -28,23 +45,6 @@ def HighScore():
         fileObj = open('highscore.txt', 'w')
         fileObj.write(str(slitherLength))
         fileObj.close()
-
-def GameOver():
-    basicfont = pygame.font.SysFont("calibri", 60, True)
-    text = basicfont.render('Game Over!! :D', True, (255, 255, 255), (52, 152, 219))
-    textrect = text.get_rect()
-    textrect.centerx = gameDisplay.get_rect().centerx
-    textrect.centery = gameDisplay.get_rect().centery - 40
-    gameDisplay.blit(text, textrect)
-    print("Game Khatam :P")
-
-def Score():
-    basicfont = pygame.font.SysFont("calibri", 40, True)
-    text = basicfont.render('Score: {}'.format(slitherLength), True, (255, 255, 255), (52, 152, 219))
-    textrect = text.get_rect()
-    textrect.centerx = 100
-    textrect.centery = 535
-    gameDisplay.blit(text, textrect)
 
 class Border:
 
@@ -61,7 +61,6 @@ class Border:
         self.borderRect = pygame.Rect(self.posX, self.posY, self.width, self.length)
         self.color = (41, 128, 185)
         self.showBorder = pygame.draw.rect(gameDisplay, self.color, self.borderRect, 0)
-
 
 class Food:
 
@@ -176,7 +175,6 @@ while crashed:
                 dirY = 0
                 crashed = False
                 flagGameOver = True
-                HighScore()
                 #break;
 
             if slitherLength >= 1:
@@ -188,7 +186,6 @@ while crashed:
                         dirY = 0
                         crashed = False
                         flagGameOver = True
-                        HighScore()
                         break;
                     counter += 1
             
@@ -213,8 +210,10 @@ while crashed:
                     else:
                         Slither[counter].showSnake()
                     counter -= 1
-                    
-        Score()
+
+        RenderText('Score: {}'.format(slitherLength), 30, 100, 535)
+        ShowHighScore()
+        UpdateHighScore()                    
         leftBorder.ShowBorder()
         rightBorder.ShowBorder()
         topBorder.ShowBorder()
@@ -227,7 +226,7 @@ while crashed:
 if flagGameOver:
     while flagGameOver:
         for event in pygame.event.get():
-            GameOver()
+            RenderText("Game Over!! :D", 60, gameDisplay.get_rect().centerx, gameDisplay.get_rect().centery - 40)
             print(event)
             if event.type == pygame.QUIT:
                 flagGameOver = False
